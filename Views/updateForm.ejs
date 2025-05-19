@@ -1,0 +1,158 @@
+<div class="formbold-main-wrapper">
+    <div class="formbold-form-wrapper">
+        <h1>Add New Items</h1>
+        <form id="item-form">
+            <div class="formbold-input-group">
+                <label for="name" class="formbold-form-label"> Name Item </label>
+                <input type="text" name="name" id="itemName" placeholder="Enter your name"
+                    value="<%= item?.name || '' %>" class="formbold-form-input" />
+            </div>
+
+            <div class="formbold-input-group">
+                <label for="category" class="formbold-form-label"> Category </label>
+                <input type="text" name="category" id="category" placeholder="Enter Category"
+                    value="<%= item?.category || '' %>" class="formbold-form-input" />
+            </div>
+
+            <div class="formbold-input-group">
+                <label for="price" class="formbold-form-label"> Price </label>
+                <input type="number" id="price" name="price" placeholder="Enter Price" class="formbold-form-input"
+                    value="<%= item?.price || '' %>" />
+            </div>
+
+            <label for="ans" class="formbold-form-label">Stock Availability</label>
+
+            <div class="formbold-radio-flex">
+                <div class="formbold-radio-group">
+                    <label class="formbold-radio-label">
+                        <input class="formbold-input-radio" type="radio" name="ans" value="true" <%=item?.inStock===true
+                            ? 'checked' : '' %> />
+                        Yes
+                        <span class="formbold-radio-checkmark"></span>
+                    </label>
+                </div>
+
+                <div class="formbold-radio-group">
+                    <label class="formbold-radio-label">
+                        <input class="formbold-input-radio" type="radio" name="ans" value="false"
+                            <%=item?.inStock===false ? 'checked' : '' %> />
+                        No
+                        <span class="formbold-radio-checkmark"></span>
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="formbold-btn">Update</button>
+        </form>
+    </div>
+</div>
+
+<!-- ✅ External Script OR Inline Script Goes Here -->
+<script>
+    document.getElementById("item-form").addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const itemName = document.getElementById("itemName").value;
+        const category = document.getElementById("category").value;
+        const price = parseInt(document.getElementById("price").value);
+        const stock = document.querySelector('input[name="ans"]:checked').value;
+
+        fetch('http://localhost:3000/api/items/<%= item._id %>', {
+            method: 'Put',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: itemName,
+                price: price,
+                category: category,
+                inStock: stock === 'true'
+            })
+        })
+            .then(res => {
+                if (!res.ok) throw new Error('Failed to add item');
+                return res.json();
+            })
+            .then(() => {
+                document.getElementById("item-form").reset();
+                window.location.href = "/index";
+            })
+            .catch(err => console.log(err));
+    });
+</script>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+    }
+
+    .formbold-main-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 48px;
+    }
+
+    .formbold-form-wrapper {
+        max-width: 570px;
+        width: 100%;
+        background: white;
+        padding: 40px;
+    }
+
+    .formbold-input-group {
+        margin-bottom: 18px;
+    }
+
+    .formbold-form-input {
+        width: 100%;
+        padding: 13px 22px;
+        border-radius: 5px;
+        border: 1px solid #dde3ec;
+        background: #ffffff;
+        font-weight: 500;
+        font-size: 16px;
+        color: #07074d;
+        outline: none;
+        resize: none;
+    }
+
+    .formbold-form-label {
+        color: #07074d;
+        font-size: 14px;
+        margin-bottom: 2px;
+        font-weight: bold;
+        display: block;
+    }
+
+    .formbold-radio-flex {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .formbold-btn {
+        font-size: 16px;
+        border-radius: 5px;
+        padding: 14px 25px;
+        border: none;
+        font-weight: 500;
+        background-color: #6a64f1;
+        color: white;
+        cursor: pointer;
+        margin-top: 20px;
+        display: block;
+    }
+
+    .formbold-btn:hover {
+        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+    }
+</style>

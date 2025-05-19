@@ -1,0 +1,208 @@
+<div class="formbold-main-wrapper">
+    <!-- Author: FormBold Team -->
+    <!-- Learn More: https://formbold.com -->
+    <div class="formbold-form-wrapper">
+        <h1>Add New Items</h1>
+        <form id="item-form" method="POST">
+            <div class="formbold-input-group">
+                <label for="name" class="formbold-form-label"> Name Item </label>
+                <input type="text" name="name" id="itemName" placeholder="Enter your name"
+                    class="formbold-form-input" />
+            </div>
+
+            <div class="formbold-input-group">
+                <label for="email" class="formbold-form-label"> Category </label>
+                <input type="text" name="lastname" id="category" placeholder="Enter Category"
+                    class="formbold-form-input" />
+            </div>
+
+            <div class="formbold-input-group">
+                <label for="age" class="formbold-form-label"> Price </label>
+                <input type="text" id="price" placeholder="Enter Price" class="formbold-form-input" />
+            </div>
+
+            <label for="ans" class="formbold-form-label">
+                Stock Availabilty
+            </label>
+
+            <div class="formbold-radio-flex">
+                <div class="formbold-radio-group">
+                    <label class="formbold-radio-label">
+                        <input class="formbold-input-radio" type="radio" name="ans" id="ans" value="true" />
+                        Yes
+                        <span class="formbold-radio-checkmark"></span>
+                    </label>
+                </div>
+
+                <div class="formbold-radio-group">
+                    <label class="formbold-radio-label">
+                        <input class="formbold-input-radio" type="radio" name="ans" id="ans" value="false" />
+                        No
+                        <span class="formbold-radio-checkmark"></span>
+                    </label>
+                </div>
+
+
+            </div>
+    </div>
+
+
+
+
+
+    <button class="formbold-btn">Submit</button>
+    </form>
+</div>
+</div>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+    }
+
+    .formbold-main-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 48px;
+    }
+
+    .formbold-form-wrapper {
+        margin: 0 auto;
+        max-width: 570px;
+        width: 100%;
+        background: white;
+        padding: 40px;
+    }
+
+
+
+    .formbold-input-group {
+        margin-bottom: 18px;
+    }
+
+    .formbold-form-select {
+        width: 100%;
+        padding: 12px 22px;
+        border-radius: 5px;
+        border: 1px solid #dde3ec;
+        background: #ffffff;
+        font-size: 16px;
+        color: #536387;
+        outline: none;
+        resize: none;
+    }
+
+    .formbold-input-radio-wrapper {
+        margin-bottom: 25px;
+    }
+
+    .formbold-radio-flex {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+
+
+
+
+
+
+
+
+
+
+    .formbold-form-input {
+        width: 100%;
+        padding: 13px 22px;
+        border-radius: 5px;
+        border: 1px solid #dde3ec;
+        background: #ffffff;
+        font-weight: 500;
+        font-size: 16px;
+        color: #07074d;
+        outline: none;
+        resize: none;
+    }
+
+    .formbold-form-input::placeholder {
+        color: #536387;
+    }
+
+    .formbold-form-input:focus {
+        border-color: #6a64f1;
+        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .formbold-form-label {
+        color: #07074d;
+        font-size: 14px;
+        line-height: 24px;
+        display: block;
+        margin-bottom: 2px;
+        font-weight: bold;
+    }
+
+    .formbold-btn {
+        text-align: center;
+        width: 29%;
+        font-size: 16px;
+        border-radius: 5px;
+        padding: 14px 25px;
+        border: none;
+        font-weight: 500;
+        background-color: #6a64f1;
+        color: white;
+        cursor: pointer;
+        margin-top: 380px;
+        margin-right: 538px;
+    }
+
+    .formbold-btn:hover {
+        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+    }
+</style>
+<script>
+    document.getElementById("item-form").addEventListener('submit', function (e) {
+        e.preventDefault();
+        const itemName = document.getElementById("itemName").value;
+        const category = document.getElementById("category").value;
+        const price = parseInt(document.getElementById("price").value);
+        const stock = document.querySelector('input[name="ans"]:checked').value;
+
+        console.log(itemName, category, price, stock)
+
+        fetch('http://localhost:3000/api/items', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: itemName,
+                price: price,
+                category: category,
+                inStock: stock
+            })
+        })
+            .then(res => {
+                if (!res.ok) throw new Error('Failed to add item');
+                return res.json();
+            })
+            .then(() => {
+                document.getElementById("item-form").reset();
+                window.location.href = "/addItem";
+
+            })
+            .catch(err => console.log(err));
+
+
+    })
+</script>
